@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>ment. — Tu cerebro, organizado por IA</title>
+<meta name="description" content="ment. organiza tus pensamientos en tareas, recordatorios y listas. Habla, escribe o arroja todo lo que tengas en la cabeza — la IA hace el resto." />
+<meta name="theme-color" content="#F5F1EA" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="ment. — Tu cerebro, organizado por IA" />
+<meta property="og:description" content="Vacía tu mente. La IA la organiza por ti." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://ment-ai.app" />
+
+<link rel="icon" type="image/png" href="/favicon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:opsz,wght@9..40,300..700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --cream: #F5F1EA;
+    --cream-deep: #ECE6D8;
+    --cream-line: #E0D9C7;
+    --ink: #1A1B23;
+    --ink-soft: #4A4B5A;
+    --ink-faint: #8A8B98;
+    --purple: #7C7CF0;
+    --purple-deep: #5A5AD8;
+    --purple-soft: #E8E8FB;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Subtle grain texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.18'/%3E%3C/svg%3E");
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ---------- NAV ---------- */
+  nav {
+    padding: 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-decoration: none;
+    font-variation-settings: 'opsz' 24;
+  }
+
+  .brand-logo {
+    width: 32px; height: 32px;
+    background: var(--purple);
+    border-radius: 8px;
+    display: grid; place-items: center;
+    transition: transform 0.4s cubic-bezier(.2,.9,.3,1.2);
+  }
+  .brand:hover .brand-logo { transform: rotate(-8deg) scale(1.05); }
+
+  .brand-logo svg { width: 22px; height: 22px; }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--ink); }
+
+  .pill {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 9px 18px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .pill:hover { background: var(--purple-deep); color: var(--cream); transform: translateY(-1px); }
+
+  @media (max-width: 720px) {
+    nav ul li:not(:last-child) { display: none; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 80px 0 120px;
+    position: relative;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px 6px 8px;
+    background: var(--cream-deep);
+    border: 1px solid var(--cream-line);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+  }
+  .kicker-dot {
+    width: 18px; height: 18px;
+    background: var(--purple);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    color: white;
+    font-size: 11px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(48px, 8.5vw, 120px);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    font-weight: 400;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+    margin-bottom: 32px;
+    max-width: 12ch;
+  }
+  h1 em {
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+    color: var(--purple-deep);
+    font-weight: 300;
+  }
+
+  .lede {
+    font-size: clamp(18px, 2.2vw, 22px);
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin-bottom: 44px;
+    line-height: 1.45;
+  }
+
+  .cta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(.2,.9,.3,1);
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .btn-primary:hover {
+    background: var(--purple-deep);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px -10px rgba(90, 90, 216, 0.5);
+  }
+  .btn-ghost {
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--cream-line);
+  }
+  .btn-ghost:hover {
+    border-color: var(--ink);
+  }
+
+  .meta {
+    color: var(--ink-faint);
+    font-size: 13px;
+    margin-left: 8px;
+  }
+
+  /* Decorative orbital element */
+  .hero-deco {
+    position: absolute;
+    top: 60px;
+    right: -80px;
+    width: 360px; height: 360px;
+    pointer-events: none;
+    opacity: 0.85;
+  }
+  .hero-deco svg { width: 100%; height: 100%; }
+  @media (max-width: 920px) {
+    .hero-deco { display: none; }
+  }
+
+  /* ---------- SECTION TEMPLATE ---------- */
+  section {
+    padding: 100px 0;
+    border-top: 1px solid var(--cream-line);
+  }
+  .section-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--purple-deep);
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+    font-variation-settings: 'opsz' 96;
+    margin-bottom: 28px;
+    max-width: 18ch;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--purple-deep);
+    font-weight: 300;
+  }
+  .section-lede {
+    font-size: 19px;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin-bottom: 60px;
+  }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--cream-line);
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--cream);
+  }
+  .step {
+    padding: 40px 36px;
+    border-right: 1px solid var(--cream-line);
+    position: relative;
+  }
+  .step:last-child { border-right: none; }
+  .step-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 64px;
+    color: var(--purple);
+    line-height: 1;
+    margin-bottom: 24px;
+    font-weight: 300;
+    font-variation-settings: 'opsz' 144;
+  }
+  .step h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .step p {
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  @media (max-width: 820px) {
+    .steps { grid-template-columns: 1fr; }
+    .step { border-right: none; border-bottom: 1px solid var(--cream-line); }
+    .step:last-child { border-bottom: none; }
+  }
+
+  /* ---------- FEATURES ---------- */
+  .features {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .features { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  .feat-list {
+    list-style: none;
+  }
+  .feat-list li {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--cream-line);
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .feat-list li:last-child { border-bottom: none; }
+  .feat-icon {
+    width: 28px; height: 28px;
+    color: var(--purple-deep);
+  }
+  .feat-list h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .feat-list p {
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* Phone mockup */
+  .phone-card {
+    background: var(--ink);
+    border-radius: 32px;
+    padding: 28px;
+    aspect-ratio: 9 / 16;
+    max-width: 320px;
+    margin: 0 auto;
+    box-shadow: 0 30px 80px -30px rgba(26, 27, 35, 0.4);
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .phone-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100px; height: 22px;
+    background: var(--cream);
+    opacity: 0.05;
+    border-radius: 0 0 14px 14px;
+  }
+  .phone-greeting {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 22px;
+  }
+  .phone-greeting em { font-style: italic; color: var(--purple); }
+  .phone-sub { font-size: 12px; color: var(--ink-faint); margin-bottom: 12px; }
+
+  .task {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .task-check {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--ink-faint);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .task-check.done {
+    background: var(--purple);
+    border-color: var(--purple);
+  }
+  .task-text { color: var(--cream); }
+  .task-text.done { color: var(--ink-faint); text-decoration: line-through; }
+  .task-meta { color: var(--ink-faint); font-size: 11px; margin-left: auto; }
+
+  /* ---------- GOOGLE CAL CALLOUT ---------- */
+  .gcal-callout {
+    background: var(--cream-deep);
+    border: 1px solid var(--cream-line);
+    border-radius: 24px;
+    padding: 56px 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 48px;
+  }
+  @media (max-width: 720px) {
+    .gcal-callout { grid-template-columns: 1fr; padding: 36px 28px; }
+  }
+  .gcal-callout h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .gcal-callout h3 em { font-style: italic; color: var(--purple-deep); }
+  .gcal-callout p {
+    color: var(--ink-soft);
+    font-size: 16px;
+    max-width: 50ch;
+  }
+  .gcal-icons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .gcal-circle {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: white;
+    box-shadow: 0 8px 20px -8px rgba(0,0,0,0.15);
+  }
+  .gcal-arrow {
+    color: var(--ink-faint);
+    font-size: 28px;
+    font-family: 'Fraunces', serif;
+  }
+  .gcal-circle.ment { background: var(--purple); }
+
+  /* ---------- PRICING ---------- */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 48px;
+  }
+  @media (max-width: 720px) {
+    .pricing-grid { grid-template-columns: 1fr; }
+  }
+  .price-card {
+    border: 1px solid var(--cream-line);
+    border-radius: 24px;
+    padding: 40px 36px;
+    background: var(--cream);
+  }
+  .price-card.pro {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+    position: relative;
+  }
+  .price-tag {
+    font-size: 13px;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .price-card.pro .price-tag { color: var(--purple); }
+  .price-amount {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+  }
+  .price-amount em { font-style: italic; color: var(--purple-deep); font-weight: 300; }
+  .price-card.pro .price-amount em { color: var(--purple); }
+  .price-period {
+    color: var(--ink-faint);
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+  .price-card.pro .price-period { color: var(--ink-faint); }
+  .price-features {
+    list-style: none;
+    margin-bottom: 32px;
+  }
+  .price-features li {
+    padding: 10px 0;
+    font-size: 14.5px;
+    border-bottom: 1px solid var(--cream-line);
+    color: var(--ink-soft);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .price-card.pro .price-features li {
+    color: var(--cream-deep);
+    border-color: rgba(255,255,255,0.08);
+  }
+  .price-features li::before {
+    content: '→';
+    color: var(--purple-deep);
+    font-family: 'Fraunces', serif;
+  }
+  .price-card.pro .price-features li::before { color: var(--purple); }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    border-top: 1px solid var(--cream-line);
+    padding: 60px 0 40px;
+    margin-top: 80px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 720px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .footer-brand {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .footer-brand em { font-style: italic; color: var(--purple-deep); }
+  .footer-tagline {
+    color: var(--ink-faint);
+    font-size: 14px;
+    max-width: 30ch;
+  }
+  .footer-col h5 {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 10px; }
+  .footer-col a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--purple-deep); }
+
+  .footer-bottom {
+    padding-top: 32px;
+    border-top: 1px solid var(--cream-line);
+    display: flex;
+    justify-content: space-between;
+    color: var(--ink-faint);
+    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  /* ---------- ANIMATIONS ---------- */
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .rise { animation: rise 0.9s cubic-bezier(.2,.9,.3,1) both; }
+  .d1 { animation-delay: 0.05s; }
+  .d2 { animation-delay: 0.15s; }
+  .d3 { animation-delay: 0.25s; }
+  .d4 { animation-delay: 0.35s; }
+  .d5 { animation-delay: 0.45s; }
+
+  @keyframes spin-slow {
+    to { transform: rotate(360deg); }
+  }
+  .deco-rot { animation: spin-slow 60s linear infinite; transform-origin: center; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- ============ NAV ============ -->
+  <nav>
+    <a href="/" class="brand">
+      <span class="brand-logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 30 Q20 20 30 20 L70 20 Q80 20 80 30 L80 70 Q80 80 70 80 L30 80 Q20 80 20 70 Z"
+                stroke="white" stroke-width="6" fill="none"/>
+          <path d="M30 35 Q42 28 50 38 Q42 50 35 48" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <path d="M70 35 Q58 28 50 42" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <path d="M35 65 Q45 58 52 62" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <path d="M65 65 Q55 70 50 62" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </span>
+      ment.
+    </a>
+    <ul>
+      <li><a href="#como">Cómo funciona</a></li>
+      <li><a href="#features">Características</a></li>
+      <li><a href="#precio">Precio</a></li>
+      <li><a href="https://apps.apple.com/app/ment" class="pill">Descargar</a></li>
+    </ul>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <div class="hero-deco">
+      <svg viewBox="0 0 400 400" class="deco-rot">
+        <circle cx="200" cy="200" r="180" stroke="#7C7CF0" stroke-width="0.8" fill="none" opacity="0.3" stroke-dasharray="2 6"/>
+        <circle cx="200" cy="200" r="140" stroke="#7C7CF0" stroke-width="0.8" fill="none" opacity="0.4" stroke-dasharray="3 8"/>
+        <circle cx="200" cy="200" r="100" stroke="#7C7CF0" stroke-width="0.8" fill="none" opacity="0.5" stroke-dasharray="1 4"/>
+        <circle cx="380" cy="200" r="3" fill="#7C7CF0"/>
+        <circle cx="200" cy="60" r="2" fill="#5A5AD8"/>
+        <circle cx="100" cy="200" r="2.5" fill="#7C7CF0"/>
+      </svg>
+    </div>
+
+    <div class="kicker rise d1">
+      <span class="kicker-dot">✦</span>
+      Disponible próximamente en App Store
+    </div>
+
+    <h1 class="rise d2">
+      Tu cerebro,<br/>
+      organizado <em>por IA</em>.
+    </h1>
+
+    <p class="lede rise d3">
+      Vacía tus pensamientos sin orden, sin formato, sin filtros — habla o escribe lo que tengas en la cabeza. ment. los convierte en tareas, recordatorios y listas claras. En español, hecho para ti.
+    </p>
+
+    <div class="cta-row rise d4">
+      <a href="https://apps.apple.com/app/ment" class="btn btn-primary">
+        Descargar para iOS
+        <span aria-hidden="true">→</span>
+      </a>
+      <a href="#como" class="btn btn-ghost">Ver cómo funciona</a>
+      <span class="meta">Gratis · Plan PRO desde $4.99/mes</span>
+    </div>
+  </header>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section id="como">
+    <div class="section-label">Cómo funciona</div>
+    <h2 class="section-title">Tres pasos. <em>Sin complicarte.</em></h2>
+    <p class="section-lede">Pensar es caótico, organizar no debería serlo. Diseñamos ment. para que la fricción entre tu cerebro y una lista clara desaparezca.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">i.</div>
+        <h3>Vacía tu mente</h3>
+        <p>Habla o escribe libremente. "Mañana junta con Mariana, comprar despensa, llamar al doctor antes del viernes…" — sin orden, sin estructura.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">ii.</div>
+        <h3>La IA organiza</h3>
+        <p>ment. interpreta cada idea, identifica fechas, prioridades y categorías. En segundos tienes tareas claras con todo en su lugar.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">iii.</div>
+        <h3>Vive tu día</h3>
+        <p>Recordatorios cuando importan, listas para lo recurrente, calendario para lo agendado. Nada se te olvida.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section id="features">
+    <div class="section-label">Características</div>
+    <h2 class="section-title">Pensado <em>en español</em>, hecho para LATAM.</h2>
+
+    <div class="features">
+      <ul class="feat-list">
+        <li>
+          <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+          <div>
+            <h4>Brain dump por voz</h4>
+            <p>Habla mientras manejas, caminas o cocinas. Whisper transcribe, la IA organiza.</p>
+          </div>
+        </li>
+        <li>
+          <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+          <div>
+            <h4>Sincronización con Google Calendar</h4>
+            <p>Las tareas con fecha aparecen en tu calendario. Cambias algo en ment., se actualiza allá. Opt-in y reversible.</p>
+          </div>
+        </li>
+        <li>
+          <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14V11a6 6 0 0 0-12 0v3a2 2 0 0 1-.6 1.4L4 17h5"/>
+            <path d="M9 17a3 3 0 0 0 6 0"/>
+          </svg>
+          <div>
+            <h4>Recordatorios inteligentes</h4>
+            <p>Push notifications justo cuando los necesitas — no antes, no después.</p>
+          </div>
+        </li>
+        <li>
+          <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          <div>
+            <h4>Listas para todo lo recurrente</h4>
+            <p>Compras, viajes, libros por leer. Lo que se repite vive en su lugar — separado del ruido del día.</p>
+          </div>
+        </li>
+        <li>
+          <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <div>
+            <h4>Modo oscuro nativo</h4>
+            <p>Sigue tu sistema o elige manualmente. Cuidado de la vista en cada hora.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="phone-card">
+        <div class="phone-greeting">Hola, <em>Eric</em></div>
+        <div class="phone-sub">Lunes 4 de mayo · 3 tareas para hoy</div>
+
+        <div class="task">
+          <span class="task-check"></span>
+          <span class="task-text">Junta con Mariana</span>
+          <span class="task-meta">10:00</span>
+        </div>
+        <div class="task">
+          <span class="task-check"></span>
+          <span class="task-text">Llamar al doctor</span>
+          <span class="task-meta">14:30</span>
+        </div>
+        <div class="task">
+          <span class="task-check done"></span>
+          <span class="task-text done">Comprar despensa</span>
+          <span class="task-meta">✓</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GOOGLE CAL CALLOUT ============ -->
+  <section>
+    <div class="gcal-callout">
+      <div>
+        <div class="section-label" style="margin-bottom: 14px;">Integración</div>
+        <h3>Tus tareas <em>en tu calendario</em>.</h3>
+        <p>Conecta tu cuenta de Google desde Ajustes y ment. agregará tus tareas con fecha como eventos en tu calendario principal. Si las editas, completas o borras en ment., el evento se actualiza solo. Tú mandas, siempre.</p>
+      </div>
+      <div class="gcal-icons">
+        <div class="gcal-circle ment">
+          <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
+            <path d="M20 30 Q20 20 30 20 L70 20 Q80 20 80 30 L80 70 Q80 80 70 80 L30 80 Q20 80 20 70 Z" stroke="white" stroke-width="6" fill="none"/>
+            <path d="M30 35 Q42 28 50 38 Q42 50 35 48" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+            <path d="M70 35 Q58 28 50 42" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+            <path d="M35 65 Q45 58 52 62" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+            <path d="M65 65 Q55 70 50 62" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <span class="gcal-arrow">→</span>
+        <div class="gcal-circle">
+          <svg width="40" height="40" viewBox="0 0 48 48">
+            <path fill="#fff" d="M37 12H11v24h26V12z"/>
+            <path fill="#1A73E8" d="M37 12H11v6h26v-6z"/>
+            <path fill="#EA4335" d="M11 30h26v6H11z"/>
+            <path fill="#FBBC04" d="M11 18h26v6H11z"/>
+            <path fill="#34A853" d="M11 24h26v6H11z"/>
+            <path fill="#1A73E8" stroke="#1A73E8" stroke-width="0.5" d="M37 12v24H11V12h26m1-1H10v26h28V11z"/>
+            <text x="24" y="32" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#1A73E8" text-anchor="middle">31</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section id="precio">
+    <div class="section-label">Precio</div>
+    <h2 class="section-title">Empieza gratis. <em>Sube cuando quieras.</em></h2>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tag">Gratis</div>
+        <div class="price-amount">$0</div>
+        <div class="price-period">para siempre</div>
+        <ul class="price-features">
+          <li>Brain dump por texto</li>
+          <li>Tareas y recordatorios</li>
+          <li>Listas básicas</li>
+          <li>Calendario</li>
+        </ul>
+        <a href="https://apps.apple.com/app/ment" class="btn btn-ghost" style="width: 100%; justify-content: center;">Descargar gratis</a>
+      </div>
+
+      <div class="price-card pro">
+        <div class="price-tag">PRO</div>
+        <div class="price-amount">$4.99<em>/mes</em></div>
+        <div class="price-period">o $39.99/año (ahorras 33%)</div>
+        <ul class="price-features">
+          <li>Brain dump por voz ilimitado</li>
+          <li>Sincronización con Google Calendar</li>
+          <li>Recordatorios inteligentes</li>
+          <li>Listas ilimitadas</li>
+          <li>Soporte prioritario</li>
+        </ul>
+        <a href="https://apps.apple.com/app/ment" class="btn" style="background: var(--purple); color: white; width: 100%; justify-content: center;">Empezar PRO</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">ment<em>.</em></div>
+        <p class="footer-tagline">Tu cerebro, organizado por IA. Hecho con cariño desde México por Sugoi.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Producto</h5>
+        <ul>
+          <li><a href="#como">Cómo funciona</a></li>
+          <li><a href="#features">Características</a></li>
+          <li><a href="#precio">Precio</a></li>
+          <li><a href="https://apps.apple.com/app/ment">Descargar</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="https://legal.ment-ai.app/privacy.html">Privacidad</a></li>
+          <li><a href="https://legal.ment-ai.app/terms.html">Términos</a></li>
+          <li><a href="https://legal.ment-ai.app/support.html">Soporte</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contacto</h5>
+        <ul>
+          <li><a href="mailto:eric@sugoi.mx">eric@sugoi.mx</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Sugoi. Todos los derechos reservados.</span>
+      <span>Hecho con ❤︎ en LATAM</span>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
