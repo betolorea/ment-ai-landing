@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "JR2Z2UY4L7.app.ment-ai",
+        "paths": [
+          "/import",
+          "/import?*"
+        ]
+      }
+    ]
+  }
+}
